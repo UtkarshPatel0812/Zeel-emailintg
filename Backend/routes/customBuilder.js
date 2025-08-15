@@ -157,3 +157,6 @@ router.post("/", async (req, res) => {
       <div style="text-align: center;">
         <a href="${SITE_URL}" class="btn-primary">Visit Our Website</a>
       </div>
+  }
+}
+)
