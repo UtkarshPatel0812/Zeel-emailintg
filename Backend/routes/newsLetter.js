@@ -13,106 +13,76 @@ router.post("/", async (req, res) => {
 
     // Admin email content with enhanced styling
     const adminContent = `
-  <div style="background-color: #f4f4f4; padding: 20px 0;">
-    <div style="max-width: 600px; background-color: #ffffff; margin: 0 auto; border-radius: 8px; padding: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);">
-      <h2 style="font-size: 24px; color: #2a6f91 ; text-align: center;">📧 New Newsletter Subscription</h2>
-
-      <div class="field" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-  <!-- Email Address Section -->
-  <div class="field-label" style="font-size: 16px; color: #333; flex: 1; margin-right: 20px;">
-    Email Address:
-    <div class="field-value" style="flex: 2;">
-    <a href="mailto:${email}" style="color: #2a6f91;">${email}</a>
-  </div>
-  </div>
-  
-
-  <!-- Subscription Date Section -->
-  <div class="field-label" style="font-size: 16px; color: #333; flex: 1; margin-left: 20px">
-    Subscription Date:
-    <div class="field-value" style="flex: 2;">
-      ${new Date().toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })}
-    </div>
-  </div>
-</div>
-
-
-      <div class="highlight-box" style="background-color: #f1f1f1; padding: 15px; margin-top: 20px; border-left: 5px solid #B8941F ;">
-        <h3 style="font-size: 18px; color: #2a6f91 ;">📝 Action Required</h3>
-        <p style="font-size: 16px; color: #555;">A new customer has subscribed to the ${COMPANY_NAME} newsletter. Please add them to the mailing list and ensure they receive future communications.</p>
+      <div class="content-title">📧 New Newsletter Subscription</div>
+      <div class="content-text">A new customer has joined our newsletter community.</div>
+      
+      <div class="field-container">
+        <div class="field-row">
+          <div class="field-label">Email Address</div>
+          <div class="field-value"><a href="mailto:${email}">${email}</a></div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Subscription Date</div>
+          <div class="field-value">${new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}</div>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <style>
-    @media (max-width: 600px) {
-      .email-container {
-        width: 100%;
-        padding: 0 15px;
-      }
-      h2 {
-        font-size: 22px;
-      }
-      .field-label, .field-value {
-        font-size: 14px;
-      }
-      .highlight-box {
-        padding: 10px;
-      }
-    }
-  </style>
+      
+      <div class="highlight-box">
+        <div class="highlight-title">📝 Action Required</div>
+        <div class="highlight-text">
+          Please add this subscriber to the mailing list and ensure they receive future newsletters and promotional communications.
+        </div>
+      </div>
 `;
 
     // Welcome email content with enhanced styling
     const welcomeContent = `
-<div style="background-color: #f4f4f4; padding: 20px 0;">
-  <div style="max-width: 600px; background-color: #ffffff; margin: 0 auto; border-radius: 8px; padding: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);">
-    <h2 style="font-size: 24px; color: #B8941F; text-align: center;">🌟 Welcome to Our Exclusive Community! 🎉</h2>
-
-    <div class="field" style="margin-bottom: 20px;">
-      <p style="font-size: 16px; color: #555;">Welcome to the <strong>${COMPANY_NAME}</strong> family! You are now part of an exclusive community of luxury enthusiasts who appreciate the finest hampers and handcrafted jewelry. 🛍️✨</p>
-    </div>
-
-    <div class="steps-container" style="margin-top: 20px;">
-      <h3 style="color: #2C1810; text-align: center; margin-bottom: 30px; font-size: 18px; font-weight: 500;">
-        We look forward to keeping you updated with our latest products and offerings. 📩
-      </h3>
-
-      <p style="font-size: 16px; color: #555555; line-height: 1.6; text-align: center;">
-        Should you wish to unsubscribe from our communications, kindly reply to this email, and we will promptly remove you from our mailing list. ❌
-      </p>
-    </div>
-
-  </div>
-</div>
-
-<style>
-  @media (max-width: 600px) {
-    .email-container {
-      width: 100%;
-      padding: 0 15px;
-    }
-    h2 {
-      font-size: 22px;
-    }
-    .button {
-      padding: 10px 25px;
-    }
-    .collections-grid {
-      flex-direction: column;
-      align-items: center;
-    }
-    .collection-item {
-      flex: 1 1 100%;
-      text-align: center;
-    }
-  }
-</style>
+      <div class="content-title">🌟 Welcome to Our Exclusive Community!</div>
+      <div class="content-text">
+        Welcome to the <strong>${COMPANY_NAME}</strong> family! You are now part of an exclusive community 
+        of luxury enthusiasts who appreciate the finest hampers and handcrafted jewelry.
+      </div>
+      
+      <div class="highlight-box">
+        <div class="highlight-title">What to Expect</div>
+        <div class="highlight-text">
+          • Exclusive previews of new collections<br>
+          • Special member-only discounts<br>
+          • Behind-the-scenes crafting stories<br>
+          • Early access to limited editions
+        </div>
+      </div>
+      
+      <div class="steps-container">
+        <div class="step-item">
+          <div class="step-number">Step 1</div>
+          <div class="step-title">Explore Our Collections</div>
+          <div class="step-description">Browse our premium hampers and handcrafted jewelry</div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">Step 2</div>
+          <div class="step-title">Customize Your Experience</div>
+          <div class="step-description">Use our custom builder for personalized creations</div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">Step 3</div>
+          <div class="step-title">Enjoy Premium Service</div>
+          <div class="step-description">Experience our white-glove customer service</div>
+        </div>
+      </div>
+      
+      <div style="text-align: center;">
+        <a href="${SITE_URL}" class="btn-primary">Start Shopping</a>
+      </div>
+      
+      <div class="content-text" style="text-align: center; margin-top: 20px; font-size: 14px; color: #8B7355;">
+        You can unsubscribe at any time by replying to this email or clicking the unsubscribe link in our newsletters.
+      </div>
 `;
 
     const result = await sendDualEmails(

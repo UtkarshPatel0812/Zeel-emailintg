@@ -12,114 +12,77 @@ router.post("/", async (req, res) => {
     const data = req.body;
 
     const customerContent = `
-  <div style="background-color: #f4f4f4; padding: 20px 0;">
-    <div style="max-width: 600px; background-color: #ffffff; margin: 0 auto; border-radius: 8px; padding: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);">
-      <h2 style="font-size: 24px; color: #B8941F; text-align: center;">💌 Hi ${data.name}, we received your message!</h2>
-      <p style="font-size: 16px; line-height: 1.6; color: #555555; text-align: center;">Below are the details of your inquiry:</p>
-
-      <table style="width: 100%; margin-top: 30px; background-color: #f9f9f9; border-radius: 8px; padding: 20px;">
-        <tr>
-          <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-            <strong style="color: #B8941F ;">Subject:</strong><br />
-            <span style="font-size: 15px; color: #666666;">${data.subject}</span>
-          </td>
-          <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-            <strong style="color: #B8941F ;">Your Message:</strong><br />
-            <span style="font-size: 15px; color: #666666;">${data.message}</span>
-          </td>
-        </tr>
-      </table>
-
-      <p style="font-size: 16px; line-height: 1.6; color: #555555; text-align: center; margin-top: 20px;">
-        💬 If you have any urgent questions, feel free to <strong><a href="mailto:${COMPANY_EMAIL}" style="color: #B8941F ;">Contact us</a></strong> directly.
-      </p>
-    </div>
-  </div>
-  <style>
-    @media (max-width: 600px) {
-      .email-container {
-        width: 100%;
-        padding: 0 15px;
-      }
-      h2 {
-        font-size: 22px;
-      }
-      .email-content p {
-        font-size: 14px;
-      }
-      table {
-        padding: 15px;
-      }
-      td {
-        display: block;
-        width: 100%;
-        padding: 10px 0;
-      }
-    }
-  </style>
+      <div class="content-title">💌 Hi ${data.name}, we received your message!</div>
+      <div class="content-text">Thank you for reaching out to us. Below are the details of your inquiry:</div>
+      
+      <div class="field-container">
+        <div class="field-row">
+          <div class="field-label">Subject</div>
+          <div class="field-value">${data.subject}</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Your Message</div>
+          <div class="field-value">${data.message}</div>
+        </div>
+        ${data.phone ? `
+        <div class="field-row">
+          <div class="field-label">Phone Number</div>
+          <div class="field-value">${data.phone}</div>
+        </div>
+        ` : ''}
+      </div>
+      
+      <div class="highlight-box">
+        <div class="highlight-title">We'll be in touch soon!</div>
+        <div class="highlight-text">
+          Our team will review your message and respond within 24 hours. For urgent matters, 
+          feel free to <a href="mailto:${COMPANY_EMAIL}">contact us directly</a>.
+        </div>
+      </div>
 `;
 
 
     const adminContent = `
-  <div style="background-color: #f4f4f4; padding: 20px 0;">
-    <div style="max-width: 600px; background-color: #ffffff; margin: 0 auto; border-radius: 8px; padding: 20px; box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);">
-      <h2 style="font-size: 24px; color: #B8941F ; text-align: center;">📬 New Submission from ${data.name}</h2>
-      <p style="font-size: 16px; line-height: 1.6; color: #555555; text-align: center;">A new inquiry has been submitted. Please find the details below:</p>
-
-      <table style="width: 100%; margin-top: 30px; background-color: #f9f9f9; border-radius: 8px; padding: 20px;">
-        <tr>
-          <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-            <strong style="color: #B8941F ;">Customer Name:</strong><br />
-            <span style="font-size: 15px; color: #666666;">${data.name}</span>
-          </td>
-          <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-            <strong style="color: #B8941F ;">Email:</strong><br />
-            <span style="font-size: 15px; color: #666666;">${data.email}</span>
-          </td>
-           <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-            <strong style="color: #B8941F ;">Phone Number:</strong><br />
-            <span style="font-size: 15px; color: #666666;">${data.phone}</span>
-          </td>
-        </tr>
-        <tr>
-        <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-            <strong style="color: #B8941F ;">Subject:</strong><br />
-            <span style="font-size: 15px; color: #666666;">${data.subject}</span>
-          </td>
-          <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-            <strong style="color: #B8941F ;">Message:</strong><br />
-            <span style="font-size: 15px; color: #666666;">${data.message}</span>
-          </td>
-          </tr>
-      </table>
-
-      <p style="font-size: 16px; line-height: 1.6; color: #555555; text-align: center; margin-top: 20px;">
-        🔔 Please respond to this inquiry as soon as possible.
-      </p>
-    </div>
-  </div>
-  <style>
-    @media (max-width: 600px) {
-      .email-container {
-        width: 100%;
-        padding: 0 15px;
-      }
-      h2 {
-        font-size: 22px;
-      }
-      .email-content p {
-        font-size: 14px;
-      }
-      table {
-        padding: 15px;
-      }
-      td {
-        display: block;
-        width: 100%;
-        padding: 10px 0;
-      }
-    }
-  </style>
+      <div class="content-title">📬 New Contact Submission</div>
+      <div class="content-text">A new customer inquiry has been received. Please review and respond promptly.</div>
+      
+      <div class="field-container">
+        <div class="field-row">
+          <div class="field-label">Customer Name</div>
+          <div class="field-value">${data.name}</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Email Address</div>
+          <div class="field-value"><a href="mailto:${data.email}">${data.email}</a></div>
+        </div>
+        ${data.phone ? `
+        <div class="field-row">
+          <div class="field-label">Phone Number</div>
+          <div class="field-value"><a href="tel:${data.phone.replace(/\D/g, '')}">${data.phone}</a></div>
+        </div>
+        ` : ''}
+        <div class="field-row">
+          <div class="field-label">Subject</div>
+          <div class="field-value">${data.subject}</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Message</div>
+          <div class="field-value">${data.message}</div>
+        </div>
+        ${data.productInterest ? `
+        <div class="field-row">
+          <div class="field-label">Product Interest</div>
+          <div class="field-value">${data.productInterest}</div>
+        </div>
+        ` : ''}
+      </div>
+      
+      <div class="highlight-box">
+        <div class="highlight-title">⏰ Action Required</div>
+        <div class="highlight-text">
+          Please respond to this customer inquiry within 24 hours to maintain our excellent service standards.
+        </div>
+      </div>
 `;
 
 

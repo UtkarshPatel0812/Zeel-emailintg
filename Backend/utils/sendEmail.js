@@ -22,9 +22,9 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://luxecollections.com";
 
 // Create transporter
-const transporter = nodemailer.createTransport(EMAIL_CONFIG);
+const transporter = nodemailer.createTransporter(EMAIL_CONFIG);
 
-// Styled email template
+// Responsive email template with luxury design
 function createEmailTemplate(content, title) {
   return `
 <!DOCTYPE html>
@@ -32,179 +32,497 @@ function createEmailTemplate(content, title) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>${title}</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
     <style>
-        body {
-            font-family: 'Helvetica', Arial, sans-serif;
-            background-color: #f4f7fc;
+        /* Reset and base styles */
+        * {
             margin: 0;
             padding: 0;
-            color: #333333;
+            box-sizing: border-box;
         }
-
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2C1810;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        table {
+            border-collapse: collapse;
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+        
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+            -ms-interpolation-mode: bicubic;
+            max-width: 100%;
+        }
+        
+        /* Container styles */
+        .email-wrapper {
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 20px 0;
+        }
+        
         .email-container {
-            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
             overflow: hidden;
-            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(44, 24, 16, 0.1);
         }
-
+        
+        /* Header styles */
         .email-header {
-            background-color: #B8941F ; /* Light blue background */
-            color: #ffffff;
-            padding: 20px;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 50%, #8B7355 100%);
+            padding: 30px 20px;
             text-align: center;
-            font-size: 18px; /* Normal readable font size */
-            font-weight: 600;
+            color: #ffffff;
         }
-
-        .email-header .company-name {
-            font-size: 30px; /* Slightly larger font for company name */
+        
+        .company-logo {
+            font-size: 28px;
             font-weight: 700;
             letter-spacing: 1px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        .email-header .tagline {
+        
+        .company-tagline {
             font-size: 14px;
-            margin-top: 10px;
+            opacity: 0.95;
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
-
+        
+        /* Content styles */
         .email-content {
-            line-height: 1.6;
+            padding: 30px 20px;
+            background-color: #ffffff;
+        }
+        
+        .content-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2C1810;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .content-text {
             font-size: 16px;
-            color: #333333;
-        }
-
-        .email-content h2 {
-            font-size: 24px;  /* Normal readable size */
-            color: #B8941F ;
-            margin-bottom: 15px;
-        }
-
-        .email-content p {
+            color: #5D4E37;
+            line-height: 1.6;
             margin-bottom: 20px;
         }
-
-        .email-content .button {
-            display: inline-block;
-            background-color: #B8941F ;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 15px 30px;
-            border-radius: 5px;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-
-        .email-footer {
-            background-color: #f9f9f9;
+        
+        /* Field styles */
+        .field-container {
+            background-color: #FEFCF9;
+            border-radius: 8px;
             padding: 20px;
-            text-align: center;
+            margin-bottom: 20px;
+            border-left: 4px solid #D4AF37;
+        }
+        
+        .field-row {
+            margin-bottom: 15px;
+        }
+        
+        .field-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .field-label {
+            font-weight: 600;
+            color: #2C1810;
             font-size: 14px;
-            color: #888888;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-
-        .email-footer p {
-            margin: 5px 0;
+        
+        .field-value {
+            font-size: 16px;
+            color: #5D4E37;
+            line-height: 1.5;
         }
-
-        .email-footer a {
-            color: #B8941F ;
+        
+        .field-value a {
+            color: #D4AF37;
             text-decoration: none;
-            transition: color 0.3s;
         }
-
-        .email-footer a:hover {
-            color: #1e2a3a;
+        
+        .field-value a:hover {
+            text-decoration: underline;
         }
-
-        /* Media Queries for Mobile Devices */
-        @media (max-width: 600px) {
-            /* Header Adjustments */
+        
+        /* Button styles */
+        .btn-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+            color: #ffffff;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Highlight box styles */
+        .highlight-box {
+            background: linear-gradient(135deg, #F9F1E7 0%, #FEFCF9 100%);
+            border: 2px solid #D4AF37;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .highlight-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2C1810;
+            margin-bottom: 10px;
+        }
+        
+        .highlight-text {
+            font-size: 16px;
+            color: #5D4E37;
+            line-height: 1.6;
+        }
+        
+        /* Steps container */
+        .steps-container {
+            margin: 30px 0;
+        }
+        
+        .step-item {
+            background-color: #FEFCF9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #8B7355;
+        }
+        
+        .step-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #D4AF37;
+            margin-bottom: 8px;
+        }
+        
+        .step-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2C1810;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            font-size: 14px;
+            color: #5D4E37;
+            line-height: 1.5;
+        }
+        
+        /* Footer styles */
+        .email-footer {
+            background-color: #2C1810;
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .footer-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #D4AF37;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #E5E5E5;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .footer-contact {
+            font-size: 13px;
+            color: #CCCCCC;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #444444;
+        }
+        
+        .footer-contact a {
+            color: #D4AF37;
+            text-decoration: none;
+        }
+        
+        /* Responsive styles */
+        @media only screen and (max-width: 600px) {
+            .email-wrapper {
+                padding: 10px 0;
+            }
+            
+            .email-container {
+                margin: 0 10px;
+                border-radius: 8px;
+            }
+            
             .email-header {
-                padding: 15px;
+                padding: 25px 15px;
             }
-
-            .email-header .company-name {
-                font-size: 26px; /* Slightly smaller on mobile */
+            
+            .company-logo {
+                font-size: 24px;
             }
-
-            .email-content h2 {
-                font-size: 20px; /* Adjust header size */
-            }
-
-            .email-content {
-                padding: 15px; /* Reduce padding on small devices */
-            }
-
-            .email-footer {
+            
+            .company-tagline {
                 font-size: 12px;
             }
-
-            /* Make buttons more responsive on mobile */
-            .email-content .button {
-                width: 100%;
+            
+            .email-content {
+                padding: 25px 15px;
+            }
+            
+            .content-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            
+            .content-text {
+                font-size: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .field-container {
                 padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .field-label {
+                font-size: 13px;
+            }
+            
+            .field-value {
+                font-size: 15px;
+            }
+            
+            .btn-primary {
+                padding: 12px 25px;
+                font-size: 15px;
+                margin: 15px 0;
+                width: 100%;
+                display: block;
+            }
+            
+            .highlight-box {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+            
+            .highlight-title {
+                font-size: 18px;
+            }
+            
+            .highlight-text {
+                font-size: 15px;
+            }
+            
+            .step-item {
+                padding: 15px;
+                margin-bottom: 12px;
+            }
+            
+            .step-number {
                 font-size: 16px;
             }
-
-            /* Mobile View Adjustments for Content Layout */
-            .email-container {
-                width: 100%; /* Full width on mobile */
-                padding: 0 10px; /* Padding on the sides */
+            
+            .step-title {
+                font-size: 15px;
             }
-
-            .email-content p {
-                font-size: 14px; /* Slightly smaller text for better readability */
+            
+            .step-description {
+                font-size: 13px;
             }
-
-            /* Footer Adjustments */
-            .email-footer p {
-                font-size: 12px; /* Smaller font in footer */
+            
+            .email-footer {
+                padding: 25px 15px;
             }
-
-            .email-footer a {
-                font-size: 14px; /* Make footer links a bit larger on mobile */
+            
+            .footer-title {
+                font-size: 16px;
+            }
+            
+            .footer-text {
+                font-size: 13px;
+            }
+            
+            .footer-contact {
+                font-size: 12px;
             }
         }
-
-        /* Additional Media Query for Large Screens (Optional) */
-        @media (min-width: 768px) {
-            .email-content {
-                font-size: 18px; /* Slightly larger font on larger screens */
+        
+        @media only screen and (max-width: 480px) {
+            .email-container {
+                margin: 0 5px;
             }
-
+            
+            .email-header {
+                padding: 20px 10px;
+            }
+            
+            .company-logo {
+                font-size: 22px;
+            }
+            
+            .email-content {
+                padding: 20px 10px;
+            }
+            
+            .content-title {
+                font-size: 18px;
+            }
+            
+            .field-container {
+                padding: 12px;
+            }
+            
+            .highlight-box {
+                padding: 15px 10px;
+            }
+            
+            .step-item {
+                padding: 12px;
+            }
+            
             .email-footer {
-                font-size: 16px;
+                padding: 20px 10px;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .email-wrapper {
+                background-color: #1a1a1a;
+            }
+            
+            .email-container {
+                background-color: #2a2a2a;
+            }
+            
+            .email-content {
+                background-color: #2a2a2a;
+            }
+            
+            .content-title {
+                color: #ffffff;
+            }
+            
+            .content-text {
+                color: #cccccc;
+            }
+            
+            .field-container {
+                background-color: #333333;
+            }
+            
+            .field-label {
+                color: #D4AF37;
+            }
+            
+            .field-value {
+                color: #cccccc;
+            }
+        }
+        
+        /* Outlook specific fixes */
+        .outlook-fix {
+            mso-line-height-rule: exactly;
+        }
+        
+        /* High DPI display support */
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) {
+            .email-header {
+                background: linear-gradient(135deg, #D4AF37 0%, #B8941F 50%, #8B7355 100%);
             }
         }
     </style>
 </head>
 <body>
-    <div class="email-container">
-        <!-- Header -->
-        <div class="email-header">
-            <div class="company-name">🎁 ${COMPANY_NAME}</div>
-            <div class="tagline">Your Source for Exquisite Hampers & Artisan Jewelry 💎</div>
-        </div>
+    <div class="email-wrapper">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+            <tr>
+                <td align="center">
+                    <div class="email-container">
+                        <!-- Header -->
+                        <div class="email-header">
+                            <div class="company-logo">🎁 ${COMPANY_NAME}</div>
+                            <div class="company-tagline">Premium Hampers & Handcrafted Jewelry</div>
+                        </div>
 
-        <!-- Content Section -->
-        <div class="email-content">
-            ${content}
-        </div>
+                        <!-- Content Section -->
+                        <div class="email-content">
+                            ${content}
+                        </div>
 
-        <!-- Footer -->
-        <div class="email-footer">
-            <p>Thank you for choosing <strong>${COMPANY_NAME}</strong>! ✨</p>
-            <p>We are dedicated to crafting unforgettable gifts with elegance and care.</p>
-            <p><strong>Contact Us 📞</strong></p>
-            <p>Email: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a> | Phone: ${COMPANY_PHONE}</p>
-            <p><a href="${SITE_URL}">Visit our website</a></p>
-            <p>&copy; ${new Date().getFullYear()} ${COMPANY_NAME}. All rights reserved. 🛍️</p>
-        </div>
+                        <!-- Footer -->
+                        <div class="email-footer">
+                            <div class="footer-title">Thank you for choosing ${COMPANY_NAME}!</div>
+                            <div class="footer-text">Creating extraordinary moments, one gift at a time.</div>
+                            
+                            <div class="footer-contact">
+                                <strong>Contact Information</strong><br>
+                                Email: <a href="mailto:${COMPANY_EMAIL}">${COMPANY_EMAIL}</a><br>
+                                Phone: <a href="tel:${COMPANY_PHONE.replace(/\D/g, '')}">${COMPANY_PHONE}</a><br>
+                                Address: ${COMPANY_ADDRESS}<br>
+                                Website: <a href="${SITE_URL}">${SITE_URL}</a>
+                                
+                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #444444;">
+                                    <div style="font-size: 12px; color: #999999;">
+                                        &copy; ${new Date().getFullYear()} ${COMPANY_NAME}. All rights reserved.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 </body>
 </html>
